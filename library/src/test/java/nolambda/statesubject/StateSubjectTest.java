@@ -34,6 +34,18 @@ public class StateSubjectTest {
     };
 
     @Test
+    public void testAdjustableLifecycle(){
+        AdjustableLifecycle lifecycle = new AdjustableLifecycle();
+        assertTrue(lifecycle.getLifecycle().getCurrentState() == Lifecycle.State.INITIALIZED);
+
+        lifecycle.getRegistry().markState(Lifecycle.State.STARTED);
+        assertTrue(lifecycle.getLifecycle().getCurrentState() == Lifecycle.State.STARTED);
+
+        lifecycle.getRegistry().markState(Lifecycle.State.DESTROYED);
+        assertTrue(lifecycle.getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED);
+    }
+
+    @Test
     public void testSubject() {
         BehaviorSubject<Integer> subject = BehaviorSubject.create();
         assertTrue(!subject.hasObservers());

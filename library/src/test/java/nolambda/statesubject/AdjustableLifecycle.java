@@ -15,9 +15,6 @@ public class AdjustableLifecycle implements LifecycleOwner {
 
     public AdjustableLifecycle() {
         registry = new LifecycleRegistry(this);
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_START);
-        registry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
     }
 
     @NonNull
