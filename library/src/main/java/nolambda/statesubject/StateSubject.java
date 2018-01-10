@@ -83,6 +83,7 @@ public class StateSubject<T> {
         LifecycleObserver observer = new DefaultLifecycleObserver() {
             @Override
             public void onStart(@NonNull LifecycleOwner owner) {
+                checkActive();
                 disposableMap.put(owner, subscribeToConsumer(consumer, subscribeScheduler, observeScheduler, transformer));
             }
 
@@ -103,6 +104,20 @@ public class StateSubject<T> {
         return new StateSubjectDisposable(this, observer, owner);
     }
 
+    private void checkActive() {
+        boolean wasInactive = disposableMap.isEmpty();
+        if (wasInactive) {
+            onActive();
+        }
+    }
+
+    private void checkInactive() {
+        boolean isInactive = disposableMap.isEmpty();
+        if (isInactive) {
+            onInactive();
+        }
+    }
+
     public void disposeWithOwner(@NonNull LifecycleOwner owner) {
         if (disposableMap.containsKey(owner)) {
             Disposable disposable = disposableMap.get(owner);
@@ -111,19 +126,30 @@ public class StateSubject<T> {
             }
             disposableMap.remove(owner);
         }
+        checkInactive();
     }
 
     private Disposable subscribeToConsumer(final Consumer<T> consumer,
                                            final Scheduler subscribeScheduler,
                                            final Scheduler observeScheduler,
                                            final ObservableTransformer<T, T> transformer) {
-        Observable<T> base = subject
-                .subscribeOn(subscribeScheduler)
-                .observeOn(observeScheduler);
 
-        return transformer == null
-                ? base.subscribe(consumer)
-                : base.compose(transformer).subscribe(consumer);
+        final Observable<T> base = transformer == null
+                ? subject
+                : subject.compose(transformer);
+
+        return base
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .subscribe(consumer);
+    }
+
+    protected void onActive() {
+        // deliberately no-op }
+    }
+
+    protected void onInactive() {
+        // deliberately no-op
     }
 
 }

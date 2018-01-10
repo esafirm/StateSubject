@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import org.junit.Test;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -34,7 +35,7 @@ public class StateSubjectTest {
     };
 
     @Test
-    public void testAdjustableLifecycle(){
+    public void testAdjustableLifecycle() {
         AdjustableLifecycle lifecycle = new AdjustableLifecycle();
         assertTrue(lifecycle.getLifecycle().getCurrentState() == Lifecycle.State.INITIALIZED);
 
@@ -119,5 +120,38 @@ public class StateSubjectTest {
                 integer -> assertTrue(integer == 1));
 
         subject.postValue(1);
+    }
+
+    @Test
+    public void testActiveInactive() {
+        ActiveInactiveState subject = new ActiveInactiveState();
+        Disposable disposable = subscribeTest(ALWAYS_ON, subject, aBoolean -> { /* no op */ });
+        assertTrue(subject.isActive());
+
+        disposable.dispose();
+        assertTrue(!subject.isActive());
+
+        AdjustableLifecycle lifecycle = new AdjustableLifecycle();
+        lifecycle.getRegistry().markState(Lifecycle.State.STARTED);
+
+        Disposable d1 = subscribeTest(ALWAYS_ON, subject, aBoolean -> { /* no op */ });
+        Disposable d2 = subscribeTest(lifecycle, subject, aBoolean -> { /* no op */ });
+
+        assertTrue(subject.isActive());
+
+        d1.dispose();
+        assertTrue(subject.isActive());
+
+        d2.dispose();
+        assertTrue(!subject.isActive());
+    }
+
+    private <T> Disposable subscribeTest(@NonNull LifecycleOwner owner, StateSubject<T> subject, Consumer<T> consumer) {
+        return subject.subscribe(
+                owner,
+                Schedulers.trampoline(),
+                Schedulers.trampoline(),
+                consumer
+        );
     }
 }
