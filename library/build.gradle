@@ -63,10 +63,9 @@ artifacts {
 
 publish {
     userOrg = 'esafirm'
-    groupId = 'nolambda'
+    groupId = 'nolambda.stream'
     artifactId = 'statesubject'
     publishVersion = '1.0.0'
     desc = 'BehaviourSubject wrapper to behave like LiveData'
     website = 'https://github.com/esafirm/stateSubject'
-    licences = ['MIT']
 }

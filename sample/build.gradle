@@ -30,6 +30,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'nolambda:statesubject:1.0.0@aar'
+    implementation 'nolambda.stream:statesubject:1.0.0'
 //    implementation project(':library')
 }

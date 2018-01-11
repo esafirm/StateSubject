@@ -7,7 +7,12 @@ Imitate `LiveData` behaviour, using RxJava's `Subject`.
 Currently you have to explicitly using @aar suffix to resolve the artifact in jcenter.
 
 ```groovy
-implementation 'nolambda:statesubject:1.0.0@aar'
+repositories {
+    jcenter()
+}
+dependencies {
+    implementation 'nolambda.stream:statesubject:1.0.0'
+}
 ```
 
 ## Usage
