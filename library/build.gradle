@@ -1,5 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.github.YusukeIwaki:bintray-release:-SNAPSHOT'
+    }
+}
 
 android {
     compileSdkVersion 27
@@ -39,6 +50,15 @@ configurations.all {
     resolutionStrategy {
         force 'com.android.support:appcompat-v7:27.0.2'
     }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 publish {
