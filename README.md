@@ -4,8 +4,6 @@ Imitate `LiveData` behaviour, using RxJava's `Subject`.
 
 ## Gradle
 
-Currently you have to explicitly using @aar suffix to resolve the artifact in jcenter.
-
 ```groovy
 repositories {
     jcenter()
