@@ -1,8 +1,9 @@
 package nolambda.statesubject;
 
-import android.arch.lifecycle.DefaultLifecycleObserver;
+import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -80,19 +81,19 @@ public class StateSubject<T> {
             return StateSubjectDisposable.EMPTY_DISPOSABLE;
         }
 
-        LifecycleObserver observer = new DefaultLifecycleObserver() {
-            @Override
+        LifecycleObserver observer = new LifecycleObserver() {
+            @OnLifecycleEvent(Lifecycle.Event.ON_START)
             public void onStart(@NonNull LifecycleOwner owner) {
                 checkActive();
                 disposableMap.put(owner, subscribeToConsumer(consumer, subscribeScheduler, observeScheduler, transformer));
             }
 
-            @Override
+            @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
             public void onStop(@NonNull LifecycleOwner owner) {
                 disposeWithOwner(owner);
             }
 
-            @Override
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             public void onDestroy(@NonNull LifecycleOwner owner) {
                 owner.getLifecycle().removeObserver(this);
                 disposeWithOwner(owner);

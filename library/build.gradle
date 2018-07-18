@@ -8,7 +8,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.YusukeIwaki:bintray-release:-SNAPSHOT'
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
@@ -41,7 +41,10 @@ dependencies {
 
     api 'io.reactivex.rxjava2:rxandroid:2.0.1'
     api 'io.reactivex.rxjava2:rxjava:2.1.8'
-    api 'android.arch.lifecycle:common-java8:1.0.0'
+
+    final lifecycle_version = '1.1.1'
+    implementation "android.arch.lifecycle:runtime:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
 
     testImplementation 'junit:junit:4.12'
 }
@@ -65,7 +68,7 @@ publish {
     userOrg = 'esafirm'
     groupId = 'nolambda.stream'
     artifactId = 'statesubject'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = 'BehaviourSubject wrapper to behave like LiveData'
     website = 'https://github.com/esafirm/stateSubject'
 }
